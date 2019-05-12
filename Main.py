@@ -100,8 +100,10 @@ def apply_topic_modeling():
 if __name__ == '__main__':
     extractor = FeatureExtractor()
     # 1. detect languages
-    extractor.extract_languages()
+    # extractor.extract_languages()
     # 2.check sentiments
-    extractor.extract_sentiments()
+    # extractor.extract_sentiments()
     # 3.topic modeling
-    apply_topic_modeling()
+    # apply_topic_modeling()
+    # 4.gender classification
+    # extractor.extract_genders()

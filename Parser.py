@@ -27,14 +27,27 @@ class Parser:
             lists.append(row)
         return lists
 
-    def add_new_lang_feature(self, review_id: int, language: str, accuracy: float):
+    def get_users(self):
+        query = 'select u.Id,u.Name,u.Language from Users u '
+        result = self.engine.execute(query)
+        lists = []
+        for row in result:
+            lists.append(row)
+        return lists
+
+    def add_new_lang_feature(self, review_id: str, language: str, accuracy: float):
         query = "Insert into  LanguageFeatures(ReviewId,Language,Accuracy) " \
                 "Values(%s, %s ,%.2f) " % ("'" + review_id + "'", "'" + language + "'", accuracy)
         self.engine.execute(query)
 
-    def add_new_sentiment_feature(self, review_id: int, score: float, magnitude: float):
+    def add_new_sentiment_feature(self, review_id: str, score: float, magnitude: float):
         query = "Insert into  SentimentFeatures(ReviewId,Score,Magnitude) " \
                 "Values(%s, %.2f ,%.2f) " % ("'" + review_id + "'", score, magnitude)
+        self.engine.execute(query)
+
+    def add_new_gender_feature(self, user_id: str, gender: str):
+        query = "Insert into  GenderFeatures(UserId,Gender) " \
+                "Values(%s, %s) " % ("'" + user_id + "'", "'"+gender+"'")
         self.engine.execute(query)
 
     def get_table_df(self, table_name: str, columns_to_drop: list = {}):
@@ -48,7 +61,11 @@ class Parser:
             df.drop(column, axis=1, inplace=True)
         return df
 
+
 # parser = Parser()
+# result = parser.get_users_and_languages()
+# for r in result[:100]:
+#     print(r)
 # df = parser.get_reviews_df()
 # print(df.head())
 # parser.add_new_sentiment_feature(1, 0.4, 0.6)
