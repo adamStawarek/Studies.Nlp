@@ -43,7 +43,6 @@ def freq_words(x, terms=30):
     plt.show()
 
 
-# function to remove stopwords
 def remove_stopwords(rev):
     rev_new = " ".join([i for i in rev if i not in stop_words])
     return rev_new
@@ -53,17 +52,19 @@ def apply_topic_modeling():
     parser = Parser()
     df = parser.get_reviews_df()
     original_df = df['Content']
+
     # remove unwanted characters, numbers and symbols
     df['Content'] = df['Content'].str.replace("[^a-zA-Z#]", " ")
+
     # remove the stopwords and short words (<2 letters) from the reviews.
-    # remove short words (length < 3)
     df['Content'] = df['Content'].apply(lambda x: ' '.join([w for w in x.split() if len(w) > 2]))
+
     # remove stopwords from the text
     reviews = [remove_stopwords(r.split()) for r in df['Content']]
+
     # make entire text lowercase
     reviews = [r.lower() for r in df['Content']]
-    # print(reviews)
-    # freq_words(reviews, 35)
+
     # reduce any given word to its base form thereby reducing multiple forms of a word to a single word.
     tokenized_reviews = pd.Series(reviews).apply(lambda x: x.split())
     print(tokenized_reviews[1])
@@ -75,17 +76,21 @@ def apply_topic_modeling():
     print(reviews_3)  # print lemmatized review
     df['Content'] = reviews_3
     freq_words(df['Content'], 35)
+
     # start by creating the term dictionary of our corpus, where every unique term is assigned an index
     dictionary = corpora.Dictionary(reviews_2)
     doc_term_matrix = [dictionary.doc2bow(rev) for rev in reviews_2]
+
     # Creating the object for LDA model using gensim library
     LDA = gensim.models.ldamodel.LdaModel
+
     # Build LDA model
     lda_model = LDA(corpus=doc_term_matrix, id2word=dictionary, num_topics=10, random_state=100,
                     chunksize=1000, passes=50)
     topics = lda_model.print_topics(num_words=4)
     for topic in topics:
         print(topic)
+
     # Visualize the topics
     visualisation = pyLDAvis.gensim.prepare(lda_model, doc_term_matrix, dictionary)
     pyLDAvis.save_html(visualisation, 'LDA_Visualization2.html')
@@ -99,6 +104,7 @@ def apply_topic_modeling():
 
 if __name__ == '__main__':
     extractor = FeatureExtractor()
+    # functions below will populate db feature tables, so use it only if data not exists yet
     # 1. detect languages
     # extractor.extract_languages()
     # 2.check sentiments
