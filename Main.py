@@ -48,9 +48,8 @@ def remove_stopwords(rev):
     return rev_new
 
 
-def apply_topic_modeling():
-    parser = Parser()
-    df = parser.get_reviews_df()
+def apply_topic_modeling(reviews_df, file_name: str = 'TopicModeling.html'):
+    df = reviews_df
     original_df = df['Content']
 
     # remove unwanted characters, numbers and symbols
@@ -93,7 +92,7 @@ def apply_topic_modeling():
 
     # Visualize the topics
     visualisation = pyLDAvis.gensim.prepare(lda_model, doc_term_matrix, dictionary)
-    pyLDAvis.save_html(visualisation, 'LDA_Visualization2.html')
+    pyLDAvis.save_html(visualisation, file_name)
     print(original_df[20])
     print(reviews_2[20])
     print(lda_model.get_document_topics(doc_term_matrix[20]))
@@ -103,13 +102,27 @@ def apply_topic_modeling():
 
 
 if __name__ == '__main__':
-    extractor = FeatureExtractor()
-    # functions below will populate db feature tables, so use it only if data not exists yet
+    # Usage example(no database involved)
+
+    # 0. get reviews & users
+    # if read from database
+    # parser = Parser()
+    # reviews = parser.get_reviews()
+    # reviews = parser.get_users()
+    reviews = pd.read_csv("reviews.csv", sep=';')
+    users = pd.read_csv("users.csv", sep=';')
+    # print first 10 reviews & users
+    # print(reviews.head(10))
+    # print(users.head(10))
+
+    extractor = FeatureExtractor(save_to_db=False)
+    extractor.load_reviews(reviews.values.tolist())
+    extractor.load_users(users.values.tolist())
     # 1. detect languages
-    # extractor.extract_languages()
+    extractor.extract_languages()
     # 2.check sentiments
-    # extractor.extract_sentiments()
-    # 3.topic modeling
-    # apply_topic_modeling()
-    # 4.gender classification
-    # extractor.extract_genders()
+    extractor.extract_sentiments()
+    # 3.gender classification
+    extractor.extract_genders()
+    # 4.topic modeling - it will take up to 3 minutes, after that open TopicModeling.html in your browser
+    apply_topic_modeling(reviews)

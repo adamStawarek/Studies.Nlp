@@ -60,18 +60,3 @@ class Parser:
         for column in columns_to_drop:
             df.drop(column, axis=1, inplace=True)
         return df
-
-
-# parser = Parser()
-# result = parser.get_users_and_languages()
-# for r in result[:100]:
-#     print(r)
-# df = parser.get_reviews_df()
-# print(df.head())
-# parser.add_new_sentiment_feature(1, 0.4, 0.6)
-# parser.add_new_lang_feature(1, 'en', 0.99)
-# reviews = parser.get_reviews()
-# for review in reviews:
-#     print(review)
-# df = parser.get_table_df('Place')
-# print(df.columns)
