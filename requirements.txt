@@ -54,7 +54,7 @@ protobuf==3.7.1
 py==1.8.0
 pyasn1==0.4.5
 pyasn1-modules==0.2.4
-Pygments==2.3.1
+Pygments==2.7.4
 pyLDAvis==2.1.2
 pyodbc==4.0.26
 pyparsing==2.4.0
